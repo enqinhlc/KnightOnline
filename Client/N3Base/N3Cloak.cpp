@@ -1,7 +1,8 @@
-// N3Cloak.cpp: implementation of the CN3Cloak class.
+ï»¿// N3Cloak.cpp: implementation of the CN3Cloak class.
 //
 //////////////////////////////////////////////////////////////////////
 
+#include "StdAfxBase.h"
 #include "N3Cloak.h"
 #include "N3Texture.h"
 #include "N3PMeshInstance.h"
@@ -414,7 +415,7 @@ void CN3Cloak::ApplyOffset(D3DXVECTOR3	&vDif)
 		m_fOffsetRecoveryTime = 1.4f;
 	}
 	else
-	{	// offset ÀÌ Àû¿ëµÇ¾î ÀÖ´Â »óÅÂ.
+	{	// offset ì´ ì ìš©ë˜ì–´ ìˆëŠ” ìƒíƒœ.
 		m_fOffsetRecoveryTime -= s_fSecPerFrm;
 		if (m_fOffsetRecoveryTime < 0.0f)
 		{	// Recovery process
@@ -439,7 +440,7 @@ void CN3Cloak::TickYaw()
 
 	float fYaw = m_bpPlayerBase->Yaw();	
 	if (fYaw != m_fPrevYaw)
-	{	// È¸ÀüÀÌ ÀÖ¾ú´Ù.
+	{	// íšŒì „ì´ ìˆì—ˆë‹¤.
 		if (fYaw - m_fPrevYaw > 0.0f)
 		{
 			if (m_eAnchorPattern == AMP_NONE && m_fAnchorPreserveTime < 0.0f)

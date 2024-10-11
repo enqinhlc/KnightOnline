@@ -1,8 +1,8 @@
-// UIWarp.cpp: implementation of the UIWarp class.
+Ôªø// UIWarp.cpp: implementation of the UIWarp class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "resource.h"
 
 #include "UIWarp.h"
@@ -30,7 +30,7 @@ CUIWarp::CUIWarp()
 	m_pBtn_Cancel = NULL;
 	
 	m_pList_Infos = NULL;
-	m_pText_Agreement = NULL; // µø¿« ªÁ«◊..
+	m_pText_Agreement = NULL; // ÎèôÏùò ÏÇ¨Ìï≠..
 }
 
 CUIWarp::~CUIWarp()
@@ -67,7 +67,7 @@ bool CUIWarp::ReceiveMessage(CN3UIBase* pSender, uint32_t dwMsg)
 	{
 		if(pSender == m_pList_Infos)
 		{
-			this->UpdateAgreement(); // µø¿«πÆ æ˜µ•¿Ã∆Æ..
+			this->UpdateAgreement(); // ÎèôÏùòÎ¨∏ ÏóÖÎç∞Ïù¥Ìä∏..
 		}
 	}
 	else if (dwMsg & UIMSG_LIST_DBLCLK)
@@ -146,10 +146,10 @@ bool CUIWarp::OnKeyPress(int iKey)
 {
 	switch(iKey)
 	{
-	case SDL_SCANCODE_ESCAPE://DIK_ESCAPE:
+	case DIK_ESCAPE:
 		ReceiveMessage(m_pBtn_Cancel, UIMSG_BUTTON_CLICK);
 		return true;
-	case SDL_SCANCODE_RETURN://DIK_RETURN:
+	case DIK_RETURN:
 		ReceiveMessage(m_pBtn_Ok, UIMSG_BUTTON_CLICK);
 		return true;
 	}

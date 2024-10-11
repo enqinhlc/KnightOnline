@@ -1,7 +1,8 @@
-// N3River2.cpp: implementation of the CN3River2 class.
+﻿// N3River2.cpp: implementation of the CN3River2 class.
 //
 //////////////////////////////////////////////////////////////////////
 
+#include "StdAfxBase.h"
 #include "N3River2.h"
 #include "N3Texture.h"
 

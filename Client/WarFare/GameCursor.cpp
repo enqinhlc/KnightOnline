@@ -1,8 +1,8 @@
-// GameCursor.cpp: implementation of the CGameCursor class.
+﻿// GameCursor.cpp: implementation of the CGameCursor class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "N3UIBase.h"
 #include "N3UIImage.h"
 #include "GameProcedure.h"

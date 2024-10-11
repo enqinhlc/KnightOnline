@@ -1,7 +1,8 @@
-// N3Sky.cpp: implementation of the CN3Sky class.
+﻿// N3Sky.cpp: implementation of the CN3Sky class.
 //
 //////////////////////////////////////////////////////////////////////
 
+#include "StdAfxBase.h"
 #include "N3Sky.h"
 #include "N3PMesh.h"
 #include "N3PMeshInstance.h"

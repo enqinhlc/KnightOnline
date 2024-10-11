@@ -1,8 +1,8 @@
-// UINPCEvent.cpp: implementation of the UINPCEvent class.
+Ôªø// UINPCEvent.cpp: implementation of the UINPCEvent class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "resource.h"
 #include "UIInn.h"
 #include "UICreateClanName.h"
@@ -40,14 +40,14 @@ bool CUIInn::ReceiveMessage(CN3UIBase* pSender, uint32_t dwMsg)
 {
 	if (dwMsg == UIMSG_BUTTON_CLICK)					
 	{
-		if(pSender->m_szID == "btn_warehouse")	//√¢∞Ì¿ÃøÎ..
+		if(pSender->m_szID == "btn_warehouse")	//Ï∞ΩÍ≥†Ïù¥Ïö©..
 		{
 			MsgSend_OpenWareHouse();
 			SetVisible(false);
 			return true;
 		}
 
-		if(pSender->m_szID == "btn_makeclan")	//clan ª˝º∫..
+		if(pSender->m_szID == "btn_makeclan")	//clan ÏÉùÏÑ±..
 		{
 			__InfoPlayerBase* pInfo = &(CGameProcedure::s_pPlayer->m_InfoBase);
 			__InfoPlayerMySelf* pInfoExt = &(CGameProcedure::s_pPlayer->m_InfoExt);
@@ -103,8 +103,8 @@ void CUIInn::Message(int iMessageID)
 
 void CUIInn::MsgSend_OpenWareHouse()
 {
-	uint8_t byBuff[2];		// ∆–≈∂ πˆ∆€..
-	int iOffset=0;		// ∆–≈∂ ø¿«¡º¬..
+	uint8_t byBuff[2];		// Ìå®ÌÇ∑ Î≤ÑÌçº..
+	int iOffset=0;		// Ìå®ÌÇ∑ Ïò§ÌîÑÏÖã..
 
 	CAPISocket::MP_AddByte(byBuff, iOffset, WIZ_WAREHOUSE);		
 	CAPISocket::MP_AddByte(byBuff, iOffset, N3_SP_WARE_OPEN);
@@ -124,7 +124,7 @@ bool CUIInn::OnKeyPress(int iChar)
 {
 	switch(iChar)
 	{
-	case SDL_SCANCODE_ESCAPE://DIK_ESCAPE:
+	case DIK_ESCAPE:
 		SetVisible(false);
 		return true;
 	}

@@ -1,8 +1,5 @@
-#if !defined(AFX_PROPERTYLIST_H__74205380_1B56_11D4_BC48_00105AA2186F__INCLUDED_)
+Ôªø#if !defined(AFX_PROPERTYLIST_H__74205380_1B56_11D4_BC48_00105AA2186F__INCLUDED_)
 #define AFX_PROPERTYLIST_H__74205380_1B56_11D4_BC48_00105AA2186F__INCLUDED_
-
-#define _WIN32_WINNT 0x0501
-#define DIRECT3D_VERSION 0x0800
 
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
@@ -25,7 +22,7 @@
 #define PIT_COLOR	2
 #define PIT_FONT	3
 #define PIT_FILE	4
-#define PIT_FILE_MULTI	5 // FileName1'\n'FileName2'\n'....FileName'\n' ¿Ã∑∏∞‘ πÆ¿⁄ø≠¿Ã µ»¥Ÿ..
+#define PIT_FILE_MULTI	5 // FileName1'\n'FileName2'\n'....FileName'\n' Ïù¥Î†áÍ≤å Î¨∏ÏûêÏó¥Ïù¥ ÎêúÎã§..
 #define PIT_CHECK	6
 #define PIT_BUTTON	7
 
@@ -40,10 +37,10 @@ class CPropertyItem
 // Attributes
 public:
 	CString			m_propName;
-	CString			m_curValue; // Color ∞™¿« Alpha ∞™¿∏∑Œµµ æ≤¿Œ¥Ÿ..
+	CString			m_curValue; // Color Í∞íÏùò Alpha Í∞íÏúºÎ°úÎèÑ Ïì∞Ïù∏Îã§..
 	int				m_nItemType;
 	CStringArray	m_szCBItemsOrFilter;
-	COLORREF		m_crColor; // ColorReference | Combo Box Index ∑Œ æ≤¿Œ¥Ÿ..
+	COLORREF		m_crColor; // ColorReference | Combo Box Index Î°ú Ïì∞Ïù∏Îã§..
 
 public:
 	void D3DColorSet(D3DCOLOR color);

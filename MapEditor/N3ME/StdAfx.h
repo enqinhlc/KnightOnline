@@ -1,9 +1,9 @@
-// stdafx.h : include file for standard system include files,
+ï»¿// stdafx.h : include file for standard system include files,
 //  or project specific include files that are used frequently, but
 //      are changed infrequently
 //
 
-// stl ¾µ·Á°í...
+// stl Â¾ÂµÂ·ÃÂ°Ã­...
 #pragma warning(disable : 4786)
 
 #if !defined(AFX_STDAFX_H__EE019C99_44DD_4876_A2B1_5B1199EB5052__INCLUDED_)
@@ -14,9 +14,6 @@
 #endif // _MSC_VER > 1000
 
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
-
-#define _WIN32_WINNT 0x0501
-#define DIRECT3D_VERSION 0x0800
 
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions

@@ -1,13 +1,9 @@
-/*
-*/
-
+ï»¿#include "StdAfxBase.h"
 #include "N3Eng.h"
 #include "N3Light.h"
 #include "LogWriter.h"
-#include "SDL2/SDL_syswm.h"
 
-//-----------------------------------------------------------------------------
-CN3Eng::CN3Eng(void)
+CN3Eng::CN3Eng()
 {
 	m_lpDD          = NULL;
 	m_lpD3D         = NULL;
@@ -35,12 +31,19 @@ CN3Eng::CN3Eng(void)
 		exit(-1);
 	}
 
-	if(s_szPath.empty())
-		PathSet(SDL_GetBasePath());
+	// í”„ë¡œê·¸ë¨ì´ ì‹¤í–‰ëœ ê²½ë¡œ..
+	if (s_szPath.empty())
+	{
+		char szPath[256];
+		char szDrive[_MAX_DRIVE], szDir[_MAX_DIR];
+		::GetModuleFileName(NULL, szPath, 256);
+		_splitpath(szPath, szDrive, szDir, NULL, NULL);
+		sprintf(szPath, "%s%s", szDrive, szDir);
+		this->PathSet(szPath); // ê²½ë¡œ ì„¤ì •..	
+	}
 }
 
-//-----------------------------------------------------------------------------
-CN3Eng::~CN3Eng(void)
+CN3Eng::~CN3Eng()
 {
 	CN3Base::ReleaseResrc();
 	delete [] m_DeviceInfo.pModes;
@@ -66,8 +69,7 @@ CN3Eng::~CN3Eng(void)
 #endif
 }
 
-//-----------------------------------------------------------------------------
-void CN3Eng::Release(void)
+void CN3Eng::Release()
 {
 	m_nModeActive   = -1;
 	m_nAdapterCount =  1;
@@ -109,7 +111,7 @@ void CN3Eng::SetViewPort(RECT& rc)
 }
 
 //-----------------------------------------------------------------------------
-void CN3Eng::SetDefaultEnvironment(void)
+void CN3Eng::SetDefaultEnvironment()
 {
 	__Matrix44 matWorld; matWorld.Identity();
 
@@ -154,7 +156,7 @@ void CN3Eng::LookAt(__Vector3 &vEye, __Vector3 &vAt, __Vector3 &vUp)
 }
 
 //-----------------------------------------------------------------------------
-bool CN3Eng::Reset(bool bWindowed, Uint32 dwWidth, Uint32 dwHeight, Uint32 dwBPP)
+bool CN3Eng::Reset(bool bWindowed, uint32_t dwWidth, uint32_t dwHeight, uint32_t dwBPP)
 {
 	if (s_lpD3DDev == NULL) return false;
 	if (dwWidth <= 0 || dwHeight <= 0) return false;
@@ -245,60 +247,24 @@ void CN3Eng::SetProjection(float fNear, float fFar, float fLens, float fAspect)
 	s_lpD3DDev->SetTransform(D3DTS_PROJECTION, &matProjection);
 }
 
-//-----------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//-----------------------------------------------------------------------------
-bool CN3Eng::Init(BOOL bWindowed, SDL_Window* pWindow, uint32_t dwWidth, uint32_t dwHeight, uint32_t dwBPP, BOOL bUseHW)
+bool CN3Eng::Init(
+	BOOL bWindowed,
+	HWND hWnd,
+	uint32_t dwWidth,
+	uint32_t dwHeight,
+	uint32_t dwBPP,
+	BOOL bUseHW)
 {
-	/*
-	SDL_Renderer* s_pSDLRenderer;
+	memset(&s_ResrcInfo, 0, sizeof(__ResrcInfo)); // Rendering Information ì´ˆê¸°í™”..
 
-	s_pSDLRenderer = SDL_CreateRenderer(
-		pWindow, -1,
-		SDL_RENDERER_ACCELERATED|
-		SDL_RENDERER_PRESENTVSYNC
-	);
-
-	if(s_pSDLRenderer == NULL) {
-		fprintf(stderr, "ER: %s\n", SDL_GetError());
-		exit(-1);
-	}
-
-	s_lpD3DDev = SDL_RenderGetD3D9Device(s_pSDLRenderer);
-	s_lpD3DDev->GetDirect3D(&m_lpD3D);
-	*/
-
-	//
-
-	memset(&s_ResrcInfo, 0, sizeof(__ResrcInfo)); // Rendering Information ÃÊ±âÈ­..
-
-	SDL_SysWMinfo info;
-	SDL_VERSION(&info.version);
-	SDL_GetWindowWMInfo(pWindow, &info);
-
-	s_hWndBase = info.info.win.window; // TODO: Remove this when we move away from DX
-	s_pWindow = pWindow;
+	s_hWndBase = hWnd;
 
 	// FIX (srmeier): I really have no idea what the second arguement here should be
-	int nAMC = m_lpD3D->GetAdapterModeCount(0, D3DFMT_X8R8G8B8); // µğ½ºÇÃ·¹ÀÌ ¸ğµå Ä«¿îÆ®
+	int nAMC = m_lpD3D->GetAdapterModeCount(0, D3DFMT_X8R8G8B8); // ë””ìŠ¤í”Œë ˆì´ ëª¨ë“œ ì¹´ìš´íŠ¸
 	if(nAMC <= 0)
 	{
 		//MessageBox(hWnd, "Can't create D3D - Invalid display mode property.", "initialization", MB_OK);
-//		{ for(int iii = 0; iii < 2; iii++) Beep(2000, 200); Sleep(300); } // ¿©·¯¹ø »à~
+//		{ for(int iii = 0; iii < 2; iii++) Beep(2000, 200); Sleep(300); } // ì—¬ëŸ¬ë²ˆ ì‚‘~
 #ifdef _N3GAME
 		CLogWriter::Write("Can't create D3D - Invalid display mode property.");
 #endif
@@ -315,7 +281,7 @@ bool CN3Eng::Init(BOOL bWindowed, SDL_Window* pWindow, uint32_t dwWidth, uint32_
 	for(int i = 0; i < nAMC; i++)
 	{
 		// FIX (srmeier): I really have no idea what the second arguement here should be
-		m_lpD3D->EnumAdapterModes(0, D3DFMT_X8R8G8B8, i, &m_DeviceInfo.pModes[i]); // µğ½ºÇÃ·¹ÀÌ ¸ğµå °¡Á®¿À±â..
+		m_lpD3D->EnumAdapterModes(0, D3DFMT_X8R8G8B8, i, &m_DeviceInfo.pModes[i]); // ë””ìŠ¤í”Œë ˆì´ ëª¨ë“œ ê°€ì ¸ì˜¤ê¸°..
 	}
 
 	D3DDEVTYPE DevType = D3DDEVTYPE_REF;
@@ -329,7 +295,7 @@ bool CN3Eng::Init(BOOL bWindowed, SDL_Window* pWindow, uint32_t dwWidth, uint32_
 	s_DevParam.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 
 	D3DFORMAT BBFormat = D3DFMT_UNKNOWN;
-	if(TRUE == bWindowed) // À©µµ¿ì ¸ğµåÀÏ °æ¿ì
+	if(TRUE == bWindowed) // ìœˆë„ìš° ëª¨ë“œì¼ ê²½ìš°
 	{
 		D3DDISPLAYMODE dm;
 		m_lpD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &dm);
@@ -342,7 +308,7 @@ bool CN3Eng::Init(BOOL bWindowed, SDL_Window* pWindow, uint32_t dwWidth, uint32_
 	else
 	{
 		s_DevParam.BackBufferCount = 1;
-		s_DevParam.AutoDepthStencilFormat = D3DFMT_D16; // ÀÚµ¿ »ı¼ºÀÌ¸é ¹«½ÃµÈ´Ù.
+		s_DevParam.AutoDepthStencilFormat = D3DFMT_D16; // ìë™ ìƒì„±ì´ë©´ ë¬´ì‹œëœë‹¤.
 		if(16 == dwBPP) BBFormat = D3DFMT_R5G6B5;
 		else if(24 == dwBPP) BBFormat = D3DFMT_R8G8B8;
 		else if(32 == dwBPP) BBFormat = D3DFMT_X8R8G8B8;
@@ -352,7 +318,7 @@ bool CN3Eng::Init(BOOL bWindowed, SDL_Window* pWindow, uint32_t dwWidth, uint32_
 	s_DevParam.BackBufferWidth = dwWidth;
 	s_DevParam.BackBufferHeight = dwHeight;
 	s_DevParam.BackBufferFormat = BBFormat;
-	s_DevParam.MultiSampleType = D3DMULTISAMPLE_NONE; // Swap Effect °¡ Discard ÇüÅÂ°¡ ¾Æ´Ï¸é ¹İµå½Ã ÀÌ·± ½ÄÀÌ¾î¾ß ÇÑ´Ù.
+	s_DevParam.MultiSampleType = D3DMULTISAMPLE_NONE; // Swap Effect ê°€ Discard í˜•íƒœê°€ ì•„ë‹ˆë©´ ë°˜ë“œì‹œ ì´ëŸ° ì‹ì´ì–´ì•¼ í•œë‹¤.
 	s_DevParam.Flags = 0;
 //#ifdef _N3TOOL
 	s_DevParam.Flags = D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
@@ -363,9 +329,9 @@ bool CN3Eng::Init(BOOL bWindowed, SDL_Window* pWindow, uint32_t dwWidth, uint32_
 	{
 //		if(	m_DeviceInfo.pModes[i].Width == dwWidth && 
 //			m_DeviceInfo.pModes[i].Height == dwHeight && 
-		if(	m_DeviceInfo.pModes[i].Format == BBFormat) // ¸ğµå°¡ ÀÏÄ¡ÇÏ¸é
+		if(	m_DeviceInfo.pModes[i].Format == BBFormat) // ëª¨ë“œê°€ ì¼ì¹˜í•˜ë©´
 		{
-			this->FindDepthStencilFormat(0, m_DeviceInfo.DevType, m_DeviceInfo.pModes[i].Format, &s_DevParam.AutoDepthStencilFormat); // ±íÀÌ¿Í ½ºÅÙ½Ç ¹öÆÛ¸¦ Ã£´Â´Ù.
+			this->FindDepthStencilFormat(0, m_DeviceInfo.DevType, m_DeviceInfo.pModes[i].Format, &s_DevParam.AutoDepthStencilFormat); // ê¹Šì´ì™€ ìŠ¤í…ì‹¤ ë²„í¼ë¥¼ ì°¾ëŠ”ë‹¤.
 			m_nModeActive = i;
 			break;
 		}
@@ -384,7 +350,7 @@ bool CN3Eng::Init(BOOL bWindowed, SDL_Window* pWindow, uint32_t dwWidth, uint32_
 			CLogWriter::Write("Can't create D3D Device - please, check DirectX or display card driver");
 			CLogWriter::Write(szDebug);
 #endif
-//			{ for(int iii = 0; iii < 3; iii++) Beep(2000, 200); Sleep(300); } // ¿©·¯¹ø »à~
+//			{ for(int iii = 0; iii < 3; iii++) Beep(2000, 200); Sleep(300); } // ì—¬ëŸ¬ë²ˆ ì‚‘~
 
 			this->Release();
 			return false;
@@ -395,19 +361,19 @@ bool CN3Eng::Init(BOOL bWindowed, SDL_Window* pWindow, uint32_t dwWidth, uint32_
 	}
 
 
-	// Device Áö¿ø Ç×¸ñÀº??
-	// DXT Áö¿ø ¿©ºÎ..
+	// Device ì§€ì› í•­ëª©ì€??
+	// DXT ì§€ì› ì—¬ë¶€..
 	s_dwTextureCaps = 0;
 	s_DevCaps.DeviceType = DevType;
 
 	s_lpD3DDev->GetDeviceCaps(&s_DevCaps);
-	if(s_DevCaps.MaxTextureWidth < 256 || s_DevCaps.MaxTextureHeight < 256) // ÅØ½ºÃ³ Áö¿ø Å©±â°¡ 256 ÀÌÇÏ¸é.. ¾Æ¿¹ Æ÷±â..
+	if(s_DevCaps.MaxTextureWidth < 256 || s_DevCaps.MaxTextureHeight < 256) // í…ìŠ¤ì²˜ ì§€ì› í¬ê¸°ê°€ 256 ì´í•˜ë©´.. ì•„ì˜ˆ í¬ê¸°..
 	{
 		MessageBox(s_hWndBase, "Can't support this graphic card : Texture size is too small", "Initialization error", MB_OK);
 #ifdef _N3GAME
 		CLogWriter::Write("Can't support this graphic card : Texture size is too small");
 #endif
-//		{ for(int iii = 0; iii < 4; iii++) Beep(2000, 200); Sleep(300); } // ¿©·¯¹ø »à~
+//		{ for(int iii = 0; iii < 4; iii++) Beep(2000, 200); Sleep(300); } // ì—¬ëŸ¬ë²ˆ ì‚‘~
 
 		this->Release();
 		return false;
@@ -422,7 +388,7 @@ bool CN3Eng::Init(BOOL bWindowed, SDL_Window* pWindow, uint32_t dwWidth, uint32_
 	if(s_DevCaps.TextureCaps & D3DPTEXTURECAPS_MIPMAP) s_dwTextureCaps |= TEX_CAPS_MIPMAP;
 	if(s_DevCaps.TextureCaps & D3DPTEXTURECAPS_POW2) s_dwTextureCaps |= TEX_CAPS_POW2;
 
-	// ±âº» ¶óÀÌÆ® Á¤º¸ ÁöÁ¤..
+	// ê¸°ë³¸ ë¼ì´íŠ¸ ì •ë³´ ì§€ì •..
 	for(int i = 0; i < 8; i++)
 	{
 		CN3Light::__Light Lgt;
@@ -431,13 +397,13 @@ bool CN3Eng::Init(BOOL bWindowed, SDL_Window* pWindow, uint32_t dwWidth, uint32_
 		s_lpD3DDev->SetLight(i, &Lgt);
 	}
 
-	// ±âº» ºä¿Í ÇÁ·ÎÁ§¼Ç ¼³Á¤.
+	// ê¸°ë³¸ ë·°ì™€ í”„ë¡œì ì…˜ ì„¤ì •.
 	this->LookAt(__Vector3(5,5,-10), __Vector3(0,0,0), __Vector3(0,1,0));
 	this->SetProjection(0.1f, 256.0f, D3DXToRadian(45.0f), (float)dwHeight/dwWidth);
 	
 	RECT rcView = { 0, 0, (int)dwWidth, (int)dwHeight };
 	this->SetViewPort(rcView);
-	this->SetDefaultEnvironment(); // ±âº» »óÅÂ·Î ¼³Á¤..
+	this->SetDefaultEnvironment(); // ê¸°ë³¸ ìƒíƒœë¡œ ì„¤ì •..
 
 	return true;
 }
@@ -486,6 +452,7 @@ BOOL CN3Eng::FindDepthStencilFormat(UINT iAdapter, D3DDEVTYPE DeviceType, D3DFOR
 }
 
 
+#ifndef _N3TOOL
 void CN3Eng::Present(HWND hWnd, RECT* pRC)
 {
 //	HRESULT rval = s_lpD3DDev->TestCooperativeLevel();
@@ -498,26 +465,17 @@ void CN3Eng::Present(HWND hWnd, RECT* pRC)
 //		return;
 //	}
 
-	/*
 	RECT rc;
-	if(s_DevParam.Windowed) // À©µµ¿ì ¸ğµå¸é...
+	if (s_DevParam.Windowed) // ìœˆë„ìš° ëª¨ë“œë©´...
 	{
 		GetClientRect(s_hWndBase, &rc);
 		pRC = &rc;
 	}
-	*/
 
-
-
-
-	//SDL_Renderer* s_pRenderer = SDL_GetRenderer(pWindow);
-	//SDL_RenderPresent(s_pRenderer);
-
-	
-	HRESULT rval = s_lpD3DDev->Present(pRC, pRC, hWnd, NULL);
+	HRESULT rval = s_lpD3DDev->Present(pRC, pRC, hWnd, nullptr);
 	if(D3D_OK == rval)
 	{
-		//s_hWndPresent = hWnd; // Present window handle À» ÀúÀåÇØ ³õ´Â´Ù.
+		s_hWndPresent = hWnd; // Present window handle ì„ ì €ì¥í•´ ë†“ëŠ”ë‹¤.
 	}
 	else if(D3DERR_DEVICELOST == rval || D3DERR_DEVICENOTRESET == rval)
 	{
@@ -533,7 +491,7 @@ void CN3Eng::Present(HWND hWnd, RECT* pRC)
 		}
 		else
 		{
-			rval = s_lpD3DDev->Present(pRC, pRC, hWnd, NULL);
+			rval = s_lpD3DDev->Present(pRC, pRC, hWnd, nullptr);
 		}
 		return;
 	}
@@ -549,12 +507,12 @@ void CN3Eng::Present(HWND hWnd, RECT* pRC)
 	
 
 	////////////////////////////////////////////////////////////////////////////////
-	// ÇÁ·¹ÀÓ À² ÃøÁ¤...
+	// í”„ë ˆì„ ìœ¨ ì¸¡ì •...
 //	float fTime = CN3Base::TimerProcess(TIMER_GETABSOLUTETIME);
 //	static float fTimePrev = fTime - 0.03333f;
 //	static uint32_t dwFrm = 0;
 //	dwFrm++;
-//	if(fTime - fTimePrev > 1.0f) // 1 ÃÊ ÀÌ»ó Áö³ª¾ß ÇÁ·¹ÀÓ ÃøÁ¤ÇÑ´Ù.. ±×·¸Áö ¾ÊÀ¸¸é µéÂß ³¯Âß ÇÑ ¼öÄ¡°¡ ³ª¿Â´Ù..
+//	if(fTime - fTimePrev > 1.0f) // 1 ì´ˆ ì´ìƒ ì§€ë‚˜ì•¼ í”„ë ˆì„ ì¸¡ì •í•œë‹¤.. ê·¸ë ‡ì§€ ì•Šìœ¼ë©´ ë“¤ì­‰ ë‚ ì­‰ í•œ ìˆ˜ì¹˜ê°€ ë‚˜ì˜¨ë‹¤..
 //	{
 //		s_fFrmPerSec = (float)dwFrm / (fTime - fTimePrev);
 //		dwFrm = 0;
@@ -562,15 +520,14 @@ void CN3Eng::Present(HWND hWnd, RECT* pRC)
 //	}
 
 	s_fSecPerFrm = CN3Base::TimerProcess(TIMER_GETELAPSEDTIME);
-	if(s_fSecPerFrm <= 0.001f || s_fSecPerFrm >= 1.0f) s_fSecPerFrm = 0.033333f; // ³Ê¹« ¾È³ª¿À¸é ±âº» °ªÀÎ 30 ÇÁ·¹ÀÓÀ¸·Î ¸ÂÃá´Ù..
-	s_fFrmPerSec = 1.0f / s_fSecPerFrm; // ÃÊ´ç ÇÁ·¹ÀÓ ¼ö ÃøÁ¤..
+	if(s_fSecPerFrm <= 0.001f || s_fSecPerFrm >= 1.0f) s_fSecPerFrm = 0.033333f; // ë„ˆë¬´ ì•ˆë‚˜ì˜¤ë©´ ê¸°ë³¸ ê°’ì¸ 30 í”„ë ˆì„ìœ¼ë¡œ ë§ì¶˜ë‹¤..
+	s_fFrmPerSec = 1.0f / s_fSecPerFrm; // ì´ˆë‹¹ í”„ë ˆì„ ìˆ˜ ì¸¡ì •..
 
 //	fTimePrev = fTime;
-	// ÇÁ·¹ÀÓ À² ÃøÁ¤...
+	// í”„ë ˆì„ ìœ¨ ì¸¡ì •...
 	////////////////////////////////////////////////////////////////////////////////
 }
-
-#ifdef _N3TOOL
+#else // _N3TOOL
 void CN3Eng::Present(HWND hWnd, RECT* pRC) {
 	RECT rc;
 	if(s_DevParam.Windowed)
@@ -582,7 +539,7 @@ void CN3Eng::Present(HWND hWnd, RECT* pRC) {
 	HRESULT rval = s_lpD3DDev->Present(pRC, pRC, hWnd, NULL);
 	if (D3D_OK == rval)
 	{
-		s_hWndPresent = hWnd; // Present window handle À» ÀúÀåÇØ ³õ´Â´Ù.
+		s_hWndPresent = hWnd; // Present window handle ì„ ì €ì¥í•´ ë†“ëŠ”ë‹¤.
 	}
 	else if (D3DERR_DEVICELOST == rval || D3DERR_DEVICENOTRESET == rval)
 	{
@@ -601,34 +558,29 @@ void CN3Eng::Present(HWND hWnd, RECT* pRC) {
 	}
 
 	s_fSecPerFrm = CN3Base::TimerProcess(TIMER_GETELAPSEDTIME);
-	if (s_fSecPerFrm <= 0.001f || s_fSecPerFrm >= 1.0f) s_fSecPerFrm = 0.033333f; // ³Ê¹« ¾È³ª¿À¸é ±âº» °ªÀÎ 30 ÇÁ·¹ÀÓÀ¸·Î ¸ÂÃá´Ù..
-	s_fFrmPerSec = 1.0f / s_fSecPerFrm; // ÃÊ´ç ÇÁ·¹ÀÓ ¼ö ÃøÁ¤..
+	if (s_fSecPerFrm <= 0.001f || s_fSecPerFrm >= 1.0f) s_fSecPerFrm = 0.033333f; // ë„ˆë¬´ ì•ˆë‚˜ì˜¤ë©´ ê¸°ë³¸ ê°’ì¸ 30 í”„ë ˆì„ìœ¼ë¡œ ë§ì¶˜ë‹¤..
+	s_fFrmPerSec = 1.0f / s_fSecPerFrm; // ì´ˆë‹¹ í”„ë ˆì„ ìˆ˜ ì¸¡ì •..
 }
 #endif
 
 void CN3Eng::Clear(D3DCOLOR crFill, RECT* pRC)
 {
 	RECT rc;
-	if(NULL == pRC && s_DevParam.Windowed) // À©µµ¿ì ¸ğµå¸é...
+	if (pRC == nullptr
+		&& s_DevParam.Windowed) // ìœˆë„ìš° ëª¨ë“œë©´...
 	{
 		GetClientRect(s_hWndBase, &rc);
-
-		//int x, y, w, h;
-		//SDL_GetWindowPosition(s_hWndBase, &x, &y);
-		//SDL_GetWindowSize(s_hWndBase, &w, &h);
-		//rc.left = x; rc.right = (x+w); rc.top = y; rc.bottom = (y+h);
-
 		pRC = &rc;
 	}
 
-	if(pRC)
+	if (pRC != nullptr)
 	{
 		_D3DRECT rc3D = { pRC->left, pRC->top, pRC->right, pRC->bottom };
 		s_lpD3DDev->Clear(1, &rc3D, D3DCLEAR_ZBUFFER | D3DCLEAR_TARGET, crFill, 1.0f, 0);
 	}
 	else
 	{
-		s_lpD3DDev->Clear(0, NULL, D3DCLEAR_ZBUFFER | D3DCLEAR_TARGET, crFill, 1.0f, 0);
+		s_lpD3DDev->Clear(0, nullptr, D3DCLEAR_ZBUFFER | D3DCLEAR_TARGET, crFill, 1.0f, 0);
 	}
 
 #ifdef _DEBUG
@@ -638,9 +590,9 @@ void CN3Eng::Clear(D3DCOLOR crFill, RECT* pRC)
 
 void CN3Eng::ClearAuto(RECT* pRC)
 {
-	DWORD dwFillColor = D3DCOLOR_ARGB(255,192,192,192); // ±âº»»ö
+	DWORD dwFillColor = D3DCOLOR_ARGB(255,192,192,192); // ê¸°ë³¸ìƒ‰
 	DWORD dwUseFog = FALSE;
-	s_lpD3DDev->GetRenderState(D3DRS_FOGENABLE, &dwUseFog); // ¾È°³¸¦ ¾²¸é ¹ÙÅÁ»öÀ» ¾È°³»öÀ» ±ò¾ÆÁØ´Ù..
+	s_lpD3DDev->GetRenderState(D3DRS_FOGENABLE, &dwUseFog); // ì•ˆê°œë¥¼ ì“°ë©´ ë°”íƒ•ìƒ‰ì„ ì•ˆê°œìƒ‰ì„ ê¹”ì•„ì¤€ë‹¤..
 	if(dwUseFog != 0) s_lpD3DDev->GetRenderState(D3DRS_FOGCOLOR, &dwFillColor);
 	else
 	{
@@ -661,19 +613,14 @@ void CN3Eng::ClearAuto(RECT* pRC)
 void CN3Eng::ClearZBuffer(const RECT* pRC)
 {
 	RECT rc;
-	if(NULL == pRC && s_DevParam.Windowed) // À©µµ¿ì ¸ğµå¸é...
+	if (pRC == nullptr
+		&& s_DevParam.Windowed) // ìœˆë„ìš° ëª¨ë“œë©´...
 	{
 		GetClientRect(s_hWndBase, &rc);
-
-		//int x, y, w, h;
-		//SDL_GetWindowPosition(s_hWndBase, &x, &y);
-		//SDL_GetWindowSize(s_hWndBase, &w, &h);
-		//rc.left = x; rc.right = (x+w); rc.top = y; rc.bottom = (y+h);
-
 		pRC = &rc;
 	}
 
-	if(pRC) 
+	if (pRC != nullptr) 
 	{
 		D3DRECT rc3D = { pRC->left, pRC->top, pRC->right, pRC->bottom };
 		s_lpD3DDev->Clear(1, &rc3D, D3DCLEAR_ZBUFFER, 0, 1.0f, 0);

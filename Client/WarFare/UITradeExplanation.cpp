@@ -1,8 +1,8 @@
-// UITradeExplanation.cpp: implementation of the CUITradeExplanation class.
+﻿// UITradeExplanation.cpp: implementation of the CUITradeExplanation class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "UITradeExplanation.h"
 #include "N3UIButton.h"
 #include "N3UIString.h"
@@ -87,13 +87,13 @@ bool CUITradeExplanation::OnKeyPress(int iKey)
 {
 	switch(iKey)
 	{
-	case SDL_SCANCODE_PAGEUP://DIK_PRIOR:
+	case DIK_PRIOR:
 		ReceiveMessage(m_pBtn_PageUp, UIMSG_BUTTON_CLICK);
 		return true;
-	case SDL_SCANCODE_PAGEDOWN://DIK_NEXT:
+	case DIK_NEXT:
 		ReceiveMessage(m_pBtn_PageDown, UIMSG_BUTTON_CLICK);
 		return true;
-	case SDL_SCANCODE_ESCAPE://DIK_ESCAPE:
+	case DIK_ESCAPE:
 		ReceiveMessage(m_pBtn_Close, UIMSG_BUTTON_CLICK);
 		return true;
 	}

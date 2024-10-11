@@ -1,4 +1,4 @@
-// UIWareHouseDlg.h: interface for the UIWareHouseDlg class.
+Ôªø// UIWareHouseDlg.h: interface for the UIWareHouseDlg class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -18,13 +18,13 @@
 
 #include "GameDef.h"
 #include "N3UIWndBase.h"
-#include "IMouseWheelInputDlg.h"
-class CUIWareHouseDlg : public CN3UIWndBase, public IMouseWheelInputDlg 
+
+class CUIWareHouseDlg : public CN3UIWndBase
 {
 	friend class CUIInventory;
 
 public:
-// ¡˜¡¢ ¡¢±Ÿ«ÿæﬂ «“ ∞¥√º ¬¸¡∂ ∆˜¿Œ≈Õ
+// ÏßÅÏ†ë Ï†ëÍ∑ºÌï¥Ïïº Ìï† Í∞ùÏ≤¥ Ï∞∏Ï°∞ Ìè¨Ïù∏ÌÑ∞
 	__IconItemSkill*		m_pMyWare[MAX_ITEM_WARE_PAGE][MAX_ITEM_TRADE];
 	__IconItemSkill*		m_pMyWareInv[MAX_ITEM_INVENTORY];
 	CN3UIString*			m_pStrMyGold;
@@ -52,35 +52,36 @@ protected:
 
 public:
 	CUIWareHouseDlg();
-	virtual ~CUIWareHouseDlg();
-	void				Release();
+	~CUIWareHouseDlg() override;
+	void				Release() override;
 
 	//this_ui_add_start
-	void				SetVisibleWithNoSound(bool bVisible, bool bWork = false, bool bReFocus = false);
-	void				SetVisible(bool bVisible);
-	bool				Load(HANDLE hFile);
-	bool				OnKeyPress(int iKey);
+	void				SetVisibleWithNoSound(bool bVisible, bool bWork = false, bool bReFocus = false) override;
+	void				SetVisible(bool bVisible) override;
+	bool				Load(HANDLE hFile) override;
+	bool				OnKeyPress(int iKey) override;
 	//this_ui_add_end
 
-	virtual uint32_t		MouseProc(uint32_t dwFlags, const POINT& ptCur, const POINT& ptOld);
-	virtual bool		ReceiveMessage(CN3UIBase* pSender, uint32_t dwMsg);
-	void				Render();
+	uint32_t			MouseProc(uint32_t dwFlags, const POINT& ptCur, const POINT& ptOld) override;
+	bool				ReceiveMessage(CN3UIBase* pSender, uint32_t dwMsg) override;
+	bool				OnMouseWheelEvent(short delta) override;
+	void				Render() override;
 	void				LeaveWareHouseState();
 	void				EnterWareHouseStateStart(int iWareGold);
 	void				AddItemInWare(int iItem, int iDurability, int iCount, int iIndex);
 	void				EnterWareHouseStateEnd();
 
-	void				InitIconWnd(e_UIWND eWnd);
-	void				InitIconUpdate();
+	void				InitIconWnd(e_UIWND eWnd) override;
+	void				InitIconUpdate() override;
 
-	__IconItemSkill*	GetHighlightIconItem(CN3UIIcon* pUIIcon);
+	__IconItemSkill*	GetHighlightIconItem(CN3UIIcon* pUIIcon) override;
 
-	void				IconRestore();
+	void				IconRestore() override;
 	
-	bool				ReceiveIconDrop(__IconItemSkill* spItem, POINT ptCur);
+	bool				ReceiveIconDrop(__IconItemSkill* spItem, POINT ptCur) override;
 
-	void				CancelIconDrop(__IconItemSkill* spItem);
-	void				AcceptIconDrop(__IconItemSkill* spItem);
+	void				CancelIconDrop(__IconItemSkill* spItem) override;
+	void				AcceptIconDrop(__IconItemSkill* spItem) override;
 
 	void				SendToServerToWareMsg(int iItemID, byte page, byte startpos, byte pos, int iCount);
 	void				SendToServerFromWareMsg(int iItemID, byte page, byte startpos, byte pos, int iCount);

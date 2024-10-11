@@ -1,8 +1,8 @@
-// APISocket.cpp: implementation of the CAPISocket class.
+ï»¿// APISocket.cpp: implementation of the CAPISocket class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "APISocket.h"
 #include <winsock.h>
 
@@ -16,7 +16,7 @@ int			CAPISocket::s_nInstanceCount = 0;
 
 
 #ifdef _CRYPTION
-BOOL		CAPISocket::s_bCryptionFlag = FALSE;			//0 : ºñ¾ÏÈ£È­ , 1 : ¾ÏÈ£È­
+BOOL		CAPISocket::s_bCryptionFlag = FALSE;			//0 : ë¹„ì•”í˜¸í™” , 1 : ì•”í˜¸í™”
 CJvCryption	CAPISocket::s_JvCrypt;
 uint32_t	CAPISocket::s_wSendVal = 0;
 uint32_t	CAPISocket::s_wRcvVal = 0;
@@ -41,7 +41,7 @@ CAPISocket::CAPISocket()
 
 	m_iSendByteCount = 0;
 	m_bConnected = FALSE;
-	m_bEnableSend = TRUE; // º¸³»±â °¡´É..?
+	m_bEnableSend = TRUE; // ë³´ë‚´ê¸° ê°€ëŠ¥..?
 }
 
 CAPISocket::~CAPISocket()
@@ -67,62 +67,11 @@ void CAPISocket::Release()
 	}
 
 	m_iSendByteCount = 0;
-
-	// Åë°è¸¦ ½áÁØ´Ù..
+		
 #ifdef _DEBUG
-/*	DWORD dwRWC = 0;
-	char szFN1[256] = "", szFN2[256] = "";
-	SYSTEMTIME ST;
-	::GetLocalTime(&ST);
-	sprintf(szFN1, "Socket_Statistics_Send_%d_%d_%d_%d.txt", ST.wMonth, ST.wDay, ST.wHour, ST.wMinute);
-	sprintf(szFN2, "Socket_Statistics_Recv_%d_%d_%d_%d.txt", ST.wMonth, ST.wDay, ST.wHour, ST.wMinute);
-	HANDLE hFile1 = ::CreateFile(szFN1, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	HANDLE hFile2 = ::CreateFile(szFN2, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	
-	char szBuff[64] = "";
-	char szCmd[32] = "";
-
-	strcpy(szBuff, "Packet\t¾ç\tÈ½¼ö\r\n");
-	WriteFile(hFile1, szBuff, lstrlen(szBuff), &dwRWC, NULL);
-	WriteFile(hFile2, szBuff, lstrlen(szBuff), &dwRWC, NULL);
-
-	for(int i = 0; i < 255; i++)
-	{
-		if(i == WIZ_NPC_MOVE) lstrcpy(szCmd, "NPC Move");
-		else if(i == WIZ_ATTACK) lstrcpy(szCmd, "Attack");
-		else if(i == WIZ_MOVE) lstrcpy(szCmd, "User Move");
-		else if(i == WIZ_MAGIC_PROCESS) lstrcpy(szCmd, "Magic");
-		else if(i == WIZ_CHAT) lstrcpy(szCmd, "Chatting");
-		else 
-		{
-			sprintf(szCmd, "ETC : %d", i);
-		}
-
-		if(m_Statistics_Send_Sum[i].iSize > 0 || m_Statistics_Send_Sum[i].dwTime > 0)
-		{
-			sprintf(szBuff, "%s\t%d\t%d\t\r\n", szCmd, m_Statistics_Send_Sum[i].iSize, m_Statistics_Send_Sum[i].dwTime);
-			WriteFile(hFile1, szBuff, lstrlen(szBuff), &dwRWC, NULL);
-		}
-
-		if(m_Statistics_Recv_Sum[i].iSize > 0 || m_Statistics_Recv_Sum[i].dwTime > 0)
-		{
-			sprintf(szBuff, "%s\t%d\t%d\t\r\n", szCmd, m_Statistics_Recv_Sum[i].iSize, m_Statistics_Recv_Sum[i].dwTime);
-			WriteFile(hFile2, szBuff, lstrlen(szBuff), &dwRWC, NULL);
-		}
-	}
-*/
-	
-	for(int i = 0; i < 255; i++)
-	{
-		memset(m_Statistics_Send_Sum, 0, sizeof(m_Statistics_Send_Sum));
-		memset(m_Statistics_Recv_Sum, 0, sizeof(m_Statistics_Recv_Sum));
-	}
-
-//	CloseHandle(hFile1);
-//	CloseHandle(hFile2);
+	memset(m_Statistics_Send_Sum, 0, sizeof(m_Statistics_Send_Sum));
+	memset(m_Statistics_Recv_Sum, 0, sizeof(m_Statistics_Recv_Sum));
 #endif
-
 }
 
 void CAPISocket::Disconnect()
@@ -136,10 +85,10 @@ void CAPISocket::Disconnect()
 	m_dwPort = 0;
 
 	m_bConnected = FALSE;
-	m_bEnableSend = TRUE; // º¸³»±â °¡´É..?
+	m_bEnableSend = TRUE; // ë³´ë‚´ê¸° ê°€ëŠ¥..?
 
 #ifdef _CRYPTION
-	InitCrypt(0); // ¾ÏÈ£È­ ÇØÁ¦..
+	InitCrypt(0); // ì•”í˜¸í™” í•´ì œ..
 #endif // #ifdef _CRYPTION
 }
 
@@ -195,7 +144,7 @@ int CAPISocket::Connect(HWND hWnd, const char* pszIP, uint32_t dwPort)
 
 	m_hSocket = (void *)sock;
 
-	// ¼ÒÄÏ ¿É¼Ç
+	// ì†Œì¼“ ì˜µì…˜
 	int iRecvBufferLen = RECEIVE_BUF_SIZE;
 	int iErr = setsockopt(sock, SOL_SOCKET, SO_RCVBUF, (char*)&iRecvBufferLen, 4);
   
@@ -222,11 +171,8 @@ int CAPISocket::Connect(HWND hWnd, const char* pszIP, uint32_t dwPort)
 	m_bConnected = TRUE;
 	
 #ifdef _DEBUG
-	for(i = 0; i < 255; i++)
-	{
-		memset(m_Statistics_Send_Sum, 0, sizeof(m_Statistics_Send_Sum));
-		memset(m_Statistics_Recv_Sum, 0, sizeof(m_Statistics_Recv_Sum));
-	}
+	memset(m_Statistics_Send_Sum, 0, sizeof(m_Statistics_Send_Sum));
+	memset(m_Statistics_Recv_Sum, 0, sizeof(m_Statistics_Recv_Sum));
 #endif
 	
 	return 0;
@@ -286,7 +232,7 @@ BOOL CAPISocket::ReceiveProcess()
 			int16_t siCore = *((int16_t*)(pData+2));
 			if ( siCore <= iCount )
 			{
-				if ( PACKET_TAIL == ntohs(*((uint16_t*)(pData+iCount-2))) ) // ÆÐÅ¶ ²¿¸® ºÎºÐ °Ë»ç..
+				if ( PACKET_TAIL == ntohs(*((uint16_t*)(pData+iCount-2))) ) // íŒ¨í‚· ê¼¬ë¦¬ ë¶€ë¶„ ê²€ì‚¬..
 				{
 					Packet * pkt = new Packet();
 					if (s_bCryptionFlag)
@@ -315,7 +261,7 @@ BOOL CAPISocket::ReceiveProcess()
 					}
 
 					m_qRecvPkt.push(pkt);
-					m_CB.HeadIncrease(siCore + 6); // È¯Çü ¹öÆÛ ÀÎµ¦½º Áõ°¡ ½ÃÅ°±â..
+					m_CB.HeadIncrease(siCore + 6); // í™˜í˜• ë²„í¼ ì¸ë±ìŠ¤ ì¦ê°€ ì‹œí‚¤ê¸°..
 					bFoundTail = TRUE;
 #ifdef _DEBUG
 					uint8_t byCmd = pData[4];
@@ -327,9 +273,9 @@ BOOL CAPISocket::ReceiveProcess()
 		}
 		else
 		{
-			// ÆÐÅ¶ÀÌ ±úÁ³´Ù??
+			// íŒ¨í‚·ì´ ê¹¨ì¡Œë‹¤??
 			__ASSERT(0, "broken packet header.. skip!");
-			m_CB.HeadIncrease(iCount); // È¯Çü ¹öÆÛ ÀÎµ¦½º Áõ°¡ ½ÃÅ°±â..
+			m_CB.HeadIncrease(iCount); // í™˜í˜• ë²„í¼ ì¸ë±ìŠ¤ ì¦ê°€ ì‹œí‚¤ê¸°..
 		}
 
 		delete[] pData, pData = NULL;
@@ -340,7 +286,7 @@ BOOL CAPISocket::ReceiveProcess()
 
 void CAPISocket::Send(uint8_t* pData, int nSize)
 {
-	if(!m_bEnableSend) return; // º¸³»±â °¡´É..?
+	if(!m_bEnableSend) return; // ë³´ë‚´ê¸° ê°€ëŠ¥..?
 	if (INVALID_SOCKET == (SOCKET)m_hSocket || FALSE == m_bConnected)
 		return;
 
@@ -356,7 +302,7 @@ void CAPISocket::Send(uint8_t* pData, int nSize)
 		memcpy(pTBuf, &s_wSendVal, sizeof(uint32_t));
 		memcpy((pTBuf + 4), pData, nSize);
 
-		*((Uint32*)(pTBuf + (nSize + 4))) = crc32(pTBuf, (nSize + 4), -1);
+		*((uint32_t*)(pTBuf + (nSize + 4))) = crc32(pTBuf, (nSize + 4), -1);
 
 		s_JvCrypt.JvEncryptionFast((nSize + 4 + 4), pTBuf, pTBuf);
 
@@ -399,12 +345,7 @@ void CAPISocket::Send(uint8_t* pData, int nSize)
 	}
 
 #ifdef _DEBUG
-	uint8_t byCmd = pData[0]; // Åë°è ³Ö±â..
-
-//	__SocketStatisics SS;
-//	SS.dwTime = GetTickCount();
-//	SS.iSize = nSize;
-//	m_Statistics_Send[byCmd].push_back(SS);
+	uint8_t byCmd = pData[0]; // í†µê³„ ë„£ê¸°..
 
 	m_Statistics_Send_Sum[byCmd].dwTime++;
 	m_Statistics_Send_Sum[byCmd].iSize += nSize;

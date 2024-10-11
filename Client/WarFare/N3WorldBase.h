@@ -1,4 +1,4 @@
-// N3WorldBase.h: interface for the CN3WorldBase class.
+ï»¿// N3WorldBase.h: interface for the CN3WorldBase class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -29,10 +29,10 @@ public:
 	// therefore CPlayerMySelf::IsAttackableTarget() should be able to check
 	// against this information and GameProcMain should be able to process the WIZ_ZONEABILITY
 	// packet and set this information.
-	Uint8 m_byTariff;
-	Uint16 m_zoneFlags;
+	uint8_t m_byTariff;
+	uint16_t m_zoneFlags;
 	ZoneAbilityType m_zoneType;
-	Uint8 m_byMinLevel, m_byMaxLevel;
+	uint8_t m_byMinLevel, m_byMaxLevel;
 
 	bool canTradeWithOtherNation() { return (m_zoneFlags & ZF_TRADE_OTHER_NATION) != 0; }
 	bool canTalkToOtherNation() { return (m_zoneFlags & ZF_TALK_OTHER_NATION) != 0; }
@@ -42,12 +42,12 @@ public:
 	bool isNationPVPZone() { return canAttackOtherNation() && !canAttackSameNation(); }
 	bool areNPCsFriendly() { return (m_zoneFlags & ZF_FRIENDLY_NPCS) != 0; }
 	bool canUpdateClan() { return (m_zoneFlags & ZF_CLAN_UPDATE) != 0; }
-	Uint16 GetZoneFlags(void) { return m_zoneFlags; }
-	Uint8 GetZoneType() { return m_zoneType; }
-	Uint8 GetTariff() { return m_byTariff; }
-	void SetTariff(Uint8 tariff) { m_byTariff = tariff; }
-	Uint8 GetMinLevelReq() { return m_byMinLevel; }
-	Uint8 GetMaxLevelReq() { return m_byMaxLevel; }
+	uint16_t GetZoneFlags(void) { return m_zoneFlags; }
+	uint8_t GetZoneType() { return m_zoneType; }
+	uint8_t GetTariff() { return m_byTariff; }
+	void SetTariff(uint8_t tariff) { m_byTariff = tariff; }
+	uint8_t GetMinLevelReq() { return m_byMinLevel; }
+	uint8_t GetMaxLevelReq() { return m_byMaxLevel; }
 
 	//..
 	virtual CN3Terrain* GetTerrainRef() = 0;
@@ -74,12 +74,12 @@ public:
 	virtual float GetHeightWithShape(float fX, float fZ, __Vector3* pvNormal = NULL) = 0; 
 	virtual CN3Shape* ShapeGetByIDWithShape(int iID) = 0;
 	virtual CN3Shape* PickWithShape(int iXScreen, int iYScreen, bool bMustHaveEvent, __Vector3* pvPick = NULL) = 0;
-	virtual bool CheckCollisionWithShape(	const __Vector3& vPos,			// Ãæµ¹ À§Ä¡
-														const __Vector3& vDir,					    // ¹æÇâ º¤ÅÍ
-														float fSpeedPerSec,							 // ÃÊ´ç ¿òÁ÷ÀÌ´Â ¼Óµµ
-														__Vector3* pvCol = NULL,				  // Ãæµ¹ ÁöÁ¡
-														__Vector3* pvNormal = NULL,				// Ãæµ¹ÇÑ¸éÀÇ ¹ı¼±º¤ÅÍ
-														__Vector3* pVec = NULL) = 0;			// Ãæµ¹ÇÑ ¸é ÀÇ Æú¸®°ï __Vector3[3]
+	virtual bool CheckCollisionWithShape(	const __Vector3& vPos,			// ì¶©ëŒ ìœ„ì¹˜
+														const __Vector3& vDir,					    // ë°©í–¥ ë²¡í„°
+														float fSpeedPerSec,							 // ì´ˆë‹¹ ì›€ì§ì´ëŠ” ì†ë„
+														__Vector3* pvCol = NULL,				  // ì¶©ëŒ ì§€ì 
+														__Vector3* pvNormal = NULL,				// ì¶©ëŒí•œë©´ì˜ ë²•ì„ ë²¡í„°
+														__Vector3* pVec = NULL) = 0;			// ì¶©ëŒí•œ ë©´ ì˜ í´ë¦¬ê³¤ __Vector3[3]
 
 	// Sky..
 	virtual D3DCOLOR GetSkyColorWithSky()	{	return 0x00000000;	}

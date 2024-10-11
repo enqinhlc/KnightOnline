@@ -1,7 +1,8 @@
-// N3Star.cpp: implementation of the CN3Star class.
+ï»¿// N3Star.cpp: implementation of the CN3Star class.
 //
 //////////////////////////////////////////////////////////////////////
 
+#include "StdAfxBase.h"
 #include "N3Star.h"
 
 #ifdef _DEBUG
@@ -34,7 +35,7 @@ void CN3Star::Release()
 
 void CN3Star::Tick()
 {
-	// º°ÀÌ Á¡Á¡ ´Ã¾î³ª°í ÁÙ¾îµå´Â°Í Á¶Á¤ÇÏ±â
+	// ë³„ì´ ì ì  ëŠ˜ì–´ë‚˜ê³  ì¤„ì–´ë“œëŠ”ê²ƒ ì¡°ì •í•˜ê¸°
 	static float fSec = 0.0f;
 	if (0.0f == m_fAddTime) return;
 

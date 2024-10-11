@@ -1,11 +1,5 @@
-#ifndef __N3ENG_H_
+﻿#ifndef __N3ENG_H_
 #define __N3ENG_H_
-
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_ttf.h"
-#include "SDL2/SDL_net.h"
-#include "SDL2/SDL_image.h"
-#include "SDL2/SDL_mixer.h"
 
 #include "ddraw.h"
 #include "N3Base.h"
@@ -44,7 +38,7 @@ public:
 	void SetViewPort(RECT& pRC);
 	void SetDefaultEnvironment(void);
 	void LookAt(__Vector3& vEye, __Vector3& vAt, __Vector3& vUp);
-	bool Reset(bool bWindowed, Uint32 dwWidth, Uint32 dwHeight, Uint32 dwBPP);
+	bool Reset(bool bWindowed, uint32_t dwWidth, uint32_t dwHeight, uint32_t dwBPP);
 	void SetProjection(float fNear, float fFar, float fLens, float fAspect);
 
 	static void ClearAuto(RECT* pRC = NULL);
@@ -53,18 +47,18 @@ public:
 	static void Present(HWND hWnd, RECT* pRC = NULL);
 
 	bool Init(
-		BOOL bWindowed, SDL_Window* pWindow,
-		uint32_t dwWidth, uint32_t dwHeight, uint32_t dwBPP, BOOL bUseHW
-	);
+		BOOL bWindowed,
+		HWND hWnd,
+		uint32_t dwWidth,
+		uint32_t dwHeight,
+		uint32_t dwBPP,
+		BOOL bUseHW);
 
 	BOOL FindDepthStencilFormat(
-		UINT iAdapter, D3DDEVTYPE DeviceType,
-		D3DFORMAT TargetFormat, D3DFORMAT* pDepthStencilFormat
-	);
-
-#ifdef _N3TOOL
-	static void Present(HWND hWnd, RECT* pRC = NULL);
-#endif
+		UINT iAdapter,
+		D3DDEVTYPE DeviceType,
+		D3DFORMAT TargetFormat,
+		D3DFORMAT* pDepthStencilFormat);
 
 public:
 	CN3Eng(void);

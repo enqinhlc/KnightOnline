@@ -1,7 +1,8 @@
-// N3FXPartBottomBoard.cpp: implementation of the CN3FXPartBottomBoard class.
+﻿// N3FXPartBottomBoard.cpp: implementation of the CN3FXPartBottomBoard class.
 //
 //////////////////////////////////////////////////////////////////////
 
+#include "StdAfxBase.h"
 #include "..\WarFare\GameProcedure.h"
 #include "..\WarFare\N3WorldManager.h"
 #include "..\WarFare\N3FXPartBottomBoardGame.h"

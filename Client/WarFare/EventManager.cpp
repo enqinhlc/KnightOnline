@@ -1,8 +1,8 @@
-// EventManager.cpp: implementation of the CEventManager class.
+﻿// EventManager.cpp: implementation of the CEventManager class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "EventManager.h"
 #include "GameProcedure.h"
 #include "PlayerMySelf.h"

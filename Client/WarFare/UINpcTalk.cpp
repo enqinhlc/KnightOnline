@@ -1,8 +1,8 @@
-// UINpcTalk.cpp: implementation of the CUINpcTalk class.
+﻿// UINpcTalk.cpp: implementation of the CUINpcTalk class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "resource.h"
 #include "UINpcTalk.h"
 

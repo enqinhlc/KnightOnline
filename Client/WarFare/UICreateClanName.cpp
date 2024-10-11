@@ -1,8 +1,8 @@
-// UICreateClanName.cpp: implementation of the UINPCEvent class.
+Ôªø// UICreateClanName.cpp: implementation of the UINPCEvent class.
 //
 //////////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "resource.h"
 #include "UICreateClanName.h"
 
@@ -79,8 +79,8 @@ void CUICreateClanName::MsgSend_MakeClan()
 {
 	int iLn = 20;
 	iLn = m_szClanName.size();
-	uint8_t byBuff[40];									// ∆–≈∂ πˆ∆€..
-	int iOffset=0;										// ∆–≈∂ ø¿«¡º¬..
+	uint8_t byBuff[40];									// Ìå®ÌÇ∑ Î≤ÑÌçº..
+	int iOffset=0;										// Ìå®ÌÇ∑ Ïò§ÌîÑÏÖã..
 	CAPISocket::MP_AddByte(byBuff, iOffset, WIZ_KNIGHTS_PROCESS);		
 	CAPISocket::MP_AddByte(byBuff, iOffset, N3_SP_KNIGHTS_CREATE);
 	CAPISocket::MP_AddShort(byBuff, iOffset, (uint8_t)iLn);

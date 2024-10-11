@@ -1,7 +1,8 @@
-// N3FXPartBillBoard.cpp: implementation of the CN3FXPartBillBoard class.
+﻿// N3FXPartBillBoard.cpp: implementation of the CN3FXPartBillBoard class.
 //
 //////////////////////////////////////////////////////////////////////
 
+#include "StdAfxBase.h"
 #include "..\WarFare\GameProcedure.h"
 #include "..\WarFare\N3WorldManager.h"
 #include "..\WarFare\N3FXPartBillBoardGame.h"
